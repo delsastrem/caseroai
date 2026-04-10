@@ -118,7 +118,7 @@ export default function MealPlan() {
           <span className="consejo-icon">👨‍🍳</span>
           <div>
             <strong>Consejo del chef</strong>
-            <p>{consejo}</p>
+            <p dangerouslySetInnerHTML={{ __html: consejo.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
           </div>
           <button className="consejo-close" onClick={() => setConsejo('')}>×</button>
         </div>
