@@ -12,7 +12,7 @@ const CATEGORIA_COLORES = {
   horneados:     { bg: '#FFF0F5', color: '#C44D7A', label: '🥧 Horneado' },
 };
 
-export default function MealPlan() {
+export default function MealPlan({ onEditarPerfil }) {
   const { perfil, plan, guardarPlan } = useFamily();
   const [planLocal, setPlanLocal] = useState(plan);
   const [stats, setStats] = useState(null);
@@ -101,6 +101,7 @@ export default function MealPlan() {
           </p>
         </div>
         <div className="meal-plan__actions">
+          <button className="btn-ghost" onClick={onEditarPerfil}>⚙️ Editar perfil</button>
           <button className="btn-secondary" onClick={regenerarPlan}>🔄 Nuevo menú</button>
           <button className="btn-primary" onClick={pedirConsejo} disabled={cargandoConsejo}>
             {cargandoConsejo ? '⏳ Consultando...' : '🤖 Pedir consejo'}

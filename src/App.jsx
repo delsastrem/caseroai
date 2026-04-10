@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { FamilyProvider, useFamily } from './context/FamilyContext';
 import Onboarding from './components/Onboarding/Onboarding';
 import MealPlan from './components/MealPlan/MealPlan';
 import './index.css';
 
 function AppContent() {
-  const { perfil, loading } = useFamily();
+  const { perfil, loading, guardarPerfil } = useFamily();
+  const [editandoPerfil, setEditandoPerfil] = useState(false);
 
   if (loading) {
     return (
@@ -25,11 +27,13 @@ function AppContent() {
     );
   }
 
-  if (!perfil || !perfil.nombre) {
-    return <Onboarding onComplete={() => {}} />;
+  if (!perfil || !perfil.nombre || editandoPerfil) {
+    return (
+      <Onboarding onComplete={() => setEditandoPerfil(false)} />
+    );
   }
 
-  return <MealPlan />;
+  return <MealPlan onEditarPerfil={() => setEditandoPerfil(true)} />;
 }
 
 export default function App() {
