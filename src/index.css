@@ -1,0 +1,71 @@
+:root {
+  --cream: #F5F0E8;
+  --warm-white: #FDFAF4;
+  --charcoal: #1C1917;
+  --brown: #44322A;
+  --terracotta: #C4622D;
+  --terracotta-light: #E8825A;
+  --sage: #7A9E7E;
+  --sage-light: #A8C5AC;
+  --gold: #D4A843;
+  --muted: #8C7B74;
+  --border: #E2D9D0;
+  --shadow: rgba(44, 30, 20, 0.08);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 16px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background-color: var(--warm-white);
+  color: var(--charcoal);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+button { cursor: pointer; font-family: var(--font-body); border: none; outline: none; }
+input, select, textarea { font-family: var(--font-body); outline: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.animate-fadeUp { animation: fadeUp 0.5s ease forwards; }
+.animate-fadeIn { animation: fadeIn 0.4s ease forwards; }
+
+.btn-primary {
+  background: var(--terracotta); color: white;
+  padding: 14px 28px; border-radius: var(--radius-sm);
+  font-size: 15px; font-weight: 500; letter-spacing: 0.01em;
+  transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--terracotta-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196, 98, 45, 0.3); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: transparent; color: var(--terracotta);
+  padding: 14px 28px; border-radius: var(--radius-sm);
+  font-size: 15px; font-weight: 500; border: 1.5px solid var(--terracotta);
+  transition: all 0.2s ease;
+}
+.btn-secondary:hover { background: var(--terracotta); color: white; }
+
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  font-size: 14px; transition: all 0.2s ease;
+}
+.btn-ghost:hover { color: var(--charcoal); background: var(--cream); }
+
+.card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 2px 8px var(--shadow); }
