@@ -1,16 +1,60 @@
-# React + Vite
+# 🍽️ CaseroAI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**AI-powered family meal planner for Latin American households**
 
-Currently, two official plugins are available:
+> Built for ALGOfest Hackathon 2026 — AI & Machine Learning Track
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🧠 The Problem
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Every day, millions of families face the same question: *¿Qué cocinamos hoy?*
 
-## Expanding the ESLint configuration
+Existing meal planners are generic, English-first, and disconnected from how Latin American families actually shop and cook.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ The Solution
+
+CaseroAI is an intelligent weekly meal planner that:
+
+- 🗓️ Generates personalized 7-day meal plans using a constraint-based algorithm
+- 👨‍👩‍👧‍👦 Adapts to each family member's preferences and restrictions
+- 🥦 Gradually introduces new dishes to picky eaters using a progressive scoring system
+- 🛒 Consolidates ingredients into a smart shopping list
+- 🏪 Suggests when to shop based on your local store schedules
+- 🇦🇷 Built with Argentine and Latin American cuisine as first-class citizens
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React + Vite
+- **Database:** Firebase Firestore
+- **AI:** Anthropic Claude API
+- **Deploy:** Vercel
+
+## 🚀 Getting Started
+
+Clone the repo, install dependencies, and add your environment variables:
+
+    git clone https://github.com/TU_USUARIO/caseroai
+    cd caseroai
+    npm install
+    cp .env.example .env
+    npm run dev
+
+## 🔑 Environment Variables
+
+Create a .env file with the following keys:
+
+    VITE_ANTHROPIC_API_KEY=your_anthropic_key
+    VITE_FIREBASE_API_KEY=your_firebase_key
+    VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+    VITE_FIREBASE_PROJECT_ID=your_project_id
+
+## 👤 Author
+
+Built solo by **Marcelo** — shift worker, father of two, and home cooking enthusiast from Buenos Aires, Argentina.
+
+*"I built this because I live this problem every day."*
+
+---
+
+*ALGOfest Hackathon 2026 submission*
