@@ -204,7 +204,7 @@ export default function MealPlan({ onEditarPerfil }) {
                     </button>
                     {respuesta && (
                       <div className="respuesta-box animate-fadeIn">
-                        <p>{respuesta}</p>
+                        <p dangerouslySetInnerHTML={{ __html: respuesta.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
                       </div>
                     )}
                   </div>
