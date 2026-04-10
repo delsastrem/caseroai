@@ -48,11 +48,23 @@ export function FamilyProvider({ children }) {
   }
 
   async function guardarPlan(nuevoPlan) {
-    const ref = doc(db, 'familias', SESSION_ID);
-    await setDoc(ref, { plan: nuevoPlan }, { merge: true });
-    setPlan(nuevoPlan);
-  }
+  const ref = doc(db, 'familias', SESSION_ID);
+  
+  // Guardar los platos del plan como conocidos automáticamente
+  const platosDelPlan = nuevoPlan.map(d => d.plato);
+  const platosConocidosActuales = perfil?.platosConocidos || [];
+  const platosConocidosActualizados = [
+    ...new Set([...platosConocidosActuales, ...platosDelPlan])
+  ];
 
+  await setDoc(ref, { 
+    plan: nuevoPlan,
+    perfil: { ...perfil, platosConocidos: platosConocidosActualizados }
+  }, { merge: true });
+  
+  setPlan(nuevoPlan);
+  setPerfil(prev => ({ ...prev, platosConocidos: platosConocidosActualizados }));
+}
   return (
     <FamilyContext.Provider value={{
       perfil, plan, loading,
