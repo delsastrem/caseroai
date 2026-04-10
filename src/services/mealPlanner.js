@@ -1,5 +1,23 @@
 const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
+// Genera los próximos 7 días desde hoy
+export function getDiasSemana() {
+  const hoy = new Date();
+  const dias = [];
+  for (let i = 0; i < 7; i++) {
+    const fecha = new Date(hoy);
+    fecha.setDate(hoy.getDate() + i);
+    const diaSemana = DIAS[fecha.getDay() === 0 ? 6 : fecha.getDay() - 1];
+    const diaNum = fecha.getDate();
+    const mes = fecha.toLocaleDateString('es-AR', { month: 'short' });
+    dias.push({
+      label: i === 0 ? `Hoy (${diaSemana})` : i === 1 ? `Mañana (${diaSemana})` : `${diaSemana} ${diaNum}/${mes}`,
+      fecha: fecha.toISOString().split('T')[0],
+    });
+  }
+  return dias;
+}
+
 // Estación actual basada en hemisferio sur (Argentina)
 function getEstacionActual() {
   const mes = new Date().getMonth() + 1; // 1-12

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFamily } from '../../context/FamilyContext';
-import { generarPlanSemanal, calcularEstadisticas, generarListaCompras } from '../../services/mealPlanner';
+import { generarPlanSemanal, calcularEstadisticas, generarListaCompras, getDiasSemana } from '../../services/mealPlanner';
 import { generarConsejoPlan, consultarSobrePlato } from '../../services/claudeApi';
 import './MealPlan.css';
 
@@ -33,11 +33,25 @@ export default function MealPlan() {
   }, [perfil]);
 
   function regenerarPlan() {
-    const nuevoPlan = generarPlanSemanal(perfil);
+    const diasSemana = getDiasSemana();
+    const nuevoPlan = generarPlanSemanal(perfil).map((dia, i) => ({
+      ...dia,
+      dia: diasSemana[i].label,
+      fecha: diasSemana[i].fecha,
+      cocinado: false,
+    }));
     setPlanLocal(nuevoPlan);
     setStats(calcularEstadisticas(nuevoPlan));
     guardarPlan(nuevoPlan);
     setConsejo('');
+  }
+
+  function toggleCocinado(index) {
+    const nuevoPlan = planLocal.map((dia, i) =>
+      i === index ? { ...dia, cocinado: !dia.cocinado } : dia
+    );
+    setPlanLocal(nuevoPlan);
+    guardarPlan(nuevoPlan);
   }
 
   async function pedirConsejo() {
@@ -75,12 +89,16 @@ export default function MealPlan() {
     );
   }
 
+  const platosCocinados = planLocal.filter(d => d.cocinado).length;
+
   return (
     <div className="meal-plan">
       <div className="meal-plan__header">
         <div>
           <h1>Menú de la semana</h1>
-          <p className="meal-plan__sub">Hola <strong>{perfil?.nombre}</strong> 👋 — {planLocal.length} días planificados</p>
+          <p className="meal-plan__sub">
+            Hola <strong>{perfil?.nombre}</strong> 👋 — {platosCocinados > 0 ? `${platosCocinados} de 7 cocinados` : '7 días planificados'}
+          </p>
         </div>
         <div className="meal-plan__actions">
           <button className="btn-secondary" onClick={regenerarPlan}>🔄 Nuevo menú</button>
@@ -135,14 +153,23 @@ export default function MealPlan() {
             const color = CATEGORIA_COLORES[dia.categoriaTipo] || CATEGORIA_COLORES.completo;
             return (
               <div
-                key={dia.dia}
-                className={`dia-card ${preguntaActiva === i ? 'expanded' : ''}`}
+                key={dia.fecha || dia.dia}
+                className={`dia-card ${preguntaActiva === i ? 'expanded' : ''} ${dia.cocinado ? 'cocinado' : ''}`}
                 style={{ animationDelay: `${i * 0.06}s` }}
               >
                 <div className="dia-card__top">
-                  <div>
-                    <span className="dia-nombre">{dia.dia}</span>
-                    {dia.esNuevo && <span className="tag-nuevo">✨ Nuevo</span>}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button
+                      className={`btn-check ${dia.cocinado ? 'checked' : ''}`}
+                      onClick={() => toggleCocinado(i)}
+                      title={dia.cocinado ? 'Marcar como pendiente' : 'Marcar como cocinado'}
+                    >
+                      {dia.cocinado ? '✅' : '⬜'}
+                    </button>
+                    <div>
+                      <span className="dia-nombre">{dia.dia}</span>
+                      {dia.esNuevo && !dia.cocinado && <span className="tag-nuevo">✨ Nuevo</span>}
+                    </div>
                   </div>
                   <span className="dia-tiempo">⏱ {dia.tiempo}'</span>
                 </div>
@@ -153,14 +180,16 @@ export default function MealPlan() {
                   <span className="tag-categoria" style={{ background: color.bg, color: color.color }}>
                     {color.label}
                   </span>
-                  <button className="btn-ask" onClick={() => {
-                    setPreguntaActiva(preguntaActiva === i ? null : i);
-                    setRespuesta('');
-                    setPreguntaTexto('');
-                  }}>💬</button>
+                  {!dia.cocinado && (
+                    <button className="btn-ask" onClick={() => {
+                      setPreguntaActiva(preguntaActiva === i ? null : i);
+                      setRespuesta('');
+                      setPreguntaTexto('');
+                    }}>💬</button>
+                  )}
                 </div>
 
-                {preguntaActiva === i && (
+                {preguntaActiva === i && !dia.cocinado && (
                   <div className="dia-pregunta animate-fadeIn">
                     <input
                       type="text"
@@ -193,25 +222,32 @@ export default function MealPlan() {
 }
 
 function ShoppingView({ plan, perfil }) {
-  const lista = generarListaCompras(plan);
+  const lista = generarListaCompras(plan.filter(d => !d.cocinado));
   const comercios = perfil?.comercios?.filter(c => c.nombre) || [];
+  const pendientes = plan.filter(d => !d.cocinado).length;
 
   return (
     <div className="shopping-view animate-fadeUp">
       <div className="shopping-header">
         <h2>Lista de compras</h2>
-        <p>{lista.length} ingredientes para la semana</p>
+        <p>{lista.length} ingredientes para {pendientes} días pendientes</p>
       </div>
       <div className="shopping-grid">
         <div className="shopping-ingredientes">
           <h3>Ingredientes</h3>
           <div className="ingredientes-list">
-            {lista.map(item => (
-              <div key={item.nombre} className="ingrediente-item">
-                <span className="ingrediente-nombre">{item.nombre}</span>
-                {item.cantidad > 1 && <span className="ingrediente-cantidad">×{item.cantidad}</span>}
+            {lista.length === 0 ? (
+              <div className="ingrediente-item">
+                <span className="ingrediente-nombre">🎉 ¡Ya cocinaste todo!</span>
               </div>
-            ))}
+            ) : (
+              lista.map(item => (
+                <div key={item.nombre} className="ingrediente-item">
+                  <span className="ingrediente-nombre">{item.nombre}</span>
+                  {item.cantidad > 1 && <span className="ingrediente-cantidad">×{item.cantidad}</span>}
+                </div>
+              ))
+            )}
           </div>
         </div>
 
